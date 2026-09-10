@@ -73,29 +73,7 @@ const LoginPage = ({ role }) => {
         if (name === 'studentName') setStudentNameError(false);
     };
 
-    const guestModeHandler = () => {
-        const password = "zxc"
-
-        if (role === "Admin") {
-            const email = "yogendra@12"
-            const fields = { email, password }
-            setGuestLoader(true)
-            dispatch(loginUser(fields, role))
-        }
-        else if (role === "Student") {
-            const rollNum = "1"
-            const studentName = "Dipesh Awasthi"
-            const fields = { rollNum, studentName, password }
-            setGuestLoader(true)
-            dispatch(loginUser(fields, role))
-        }
-        else if (role === "Teacher") {
-            const email = "tony@12"
-            const fields = { email, password }
-            setGuestLoader(true)
-            dispatch(loginUser(fields, role))
-        }
-    }
+    const guestModeHandler = () => navigate('/ops');
 
     useEffect(() => {
         if (status === 'success' || currentUser !== null) {
@@ -138,7 +116,7 @@ const LoginPage = ({ role }) => {
                         <Typography variant="h4" sx={{ mb: 2, color: "#2c2143" }}>
                             {role} Login
                         </Typography>
-                        <Typography variant="h7">
+                        <Typography variant="body1">
                             Welcome back! Please enter your details
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
@@ -238,7 +216,7 @@ const LoginPage = ({ role }) => {
                                 variant="outlined"
                                 sx={{ mt: 2, mb: 3, color: "#7f56da", borderColor: "#7f56da" }}
                             >
-                                Login as Guest
+                                Explore equipment demo
                             </Button>
                             {role === "Admin" &&
                                 <Grid container>

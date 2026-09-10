@@ -1,97 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Grid, Box, Button } from '@mui/material';
-import styled from 'styled-components';
-import Students from "../assets/students.svg";
-import { LightPurpleButton } from '../components/buttonStyles';
+import { SchoolRounded, ArrowForwardRounded, CheckCircleOutlineRounded, EastRounded } from '@mui/icons-material';
+import Students from '../assets/students.svg';
+import '../ops/operations.css';
+import './homepage.css';
 
-const Homepage = () => {
-    return (
-        <StyledContainer>
-            <Grid container spacing={0}>
-                <Grid item xs={12} md={6}>
-                    <img src={Students} alt="students" style={{ width: '100%' }} />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <StyledPaper elevation={3}>
-                        <StyledTitle>
-                            Welcome to
-                            <br />
-                            CampusFlow
-                        </StyledTitle>
-                        <StyledText>
-                            Streamline campus management, class organization, and add students and faculty.
-                            Seamlessly track attendance, assess performance, and provide feedback.
-                            Access records, view marks, and communicate effortlessly.
-                        </StyledText>
-                        <StyledBox>
-                            <StyledLink to="/choose">
-                                <LightPurpleButton variant="contained" fullWidth>
-                                    Login
-                                </LightPurpleButton>
-                            </StyledLink>
-                            <StyledLink to="/chooseasguest">
-                                <Button variant="outlined" fullWidth
-                                    sx={{ mt: 2, mb: 3, color: "#7f56da", borderColor: "#7f56da" }}
-                                >
-                                    Login as Guest
-                                </Button>
-                            </StyledLink>
-                            <StyledText>
-                                Don't have an account?{' '}
-                                <Link to="/Adminregister" style={{color:"#550080"}}>
-                                    Sign up
-                                </Link>
-                            </StyledText>
-                        </StyledBox>
-                    </StyledPaper>
-                </Grid>
-            </Grid>
-        </StyledContainer>
-    );
-};
-
-export default Homepage;
-
-const StyledContainer = styled(Container)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-`;
-
-const StyledPaper = styled.div`
-  padding: 24px;
-  height: 100vh;
-`;
-
-const StyledBox = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content:center;
-  gap: 16px;
-  padding: 24px;
-`;
-
-const StyledTitle = styled.h1`
-  font-size: 3rem;
-  color: #252525;
-  /* font-family: "Manrope"; */
-  font-weight: bold;
-  padding-top: 0;
-  letter-spacing: normal;
-  line-height: normal;
-`;
-
-const StyledText = styled.p`
-  /* color: #550080; */
-  margin-top: 30px;
-  margin-bottom: 30px; 
-  letter-spacing: normal;
-  line-height: normal;
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-`;
+export default function Homepage() {
+  return <div className="cf-landing"><a className="cf-skip" href="#welcome">Skip to content</a>
+    <header className="cf-landing-nav"><Link to="/" className="cf-brand"><span className="cf-brand-mark"><SchoolRounded /></span><span>Campus<span className="cf-purple">Flow</span><small>ROOM FOR YOUR IDEAS</small></span></Link><nav aria-label="CampusFlow navigation"><Link to="/choose" className="cf-landing-portal">Academic portal</Link><Link to="/ops" className="cf-button primary">Open workspace <ArrowForwardRounded /></Link></nav></header>
+    <main id="welcome"><section className="cf-landing-hero"><div className="cf-landing-art"><div className="cf-art-caption"><span>Made for campus life</span><small>And the people who make it happen.</small></div><img src={Students} alt="Students collaborating and sharing ideas on campus" /><div className="cf-art-note"><CheckCircleOutlineRounded /><span>A little less admin.<br /><strong>A lot more possibility.</strong></span></div></div><div className="cf-landing-copy"><span className="cf-landing-badge">YOUR CAMPUS. BETTER CONNECTED.</span><h1>Less chasing.<br />More <span>campus life.</span></h1><p>From everyday classes to your next big club idea, keep the people, plans and equipment moving together.</p><div className="cf-landing-actions"><Link to="/ops" className="cf-button primary">Explore the workspace <ArrowForwardRounded /></Link><Link to="/choose" className="cf-text-link">Go to academic portal <EastRounded /></Link></div><p className="cf-landing-demo"><CheckCircleOutlineRounded />Try the full equipment workflow. No signup needed.</p></div></section>
+    <section className="cf-landing-features" aria-label="What CampusFlow helps with">{[['01','Find your next essential','A camera for your club. A projector for your pitch. Equipment that helps ideas happen.'],['02','Know what happens next','Request, approval, collection, return. A clear next step for everyone involved.'],['03','Keep the human connection','A reason with every decision and a history of every handoff. Less guessing, more doing.']].map(([n,title,text])=><article key={n}><span>{n}</span><h2>{title}</h2><p>{text}</p></article>)}</section></main>
+    <footer className="cf-landing-footer"><span>CampusFlow · Built around campus life.</span><Link to="/ops">Let’s make things happen <EastRounded /></Link></footer>
+  </div>;
+}

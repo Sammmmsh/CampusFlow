@@ -1,12 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+let savedUser = null;
+try { savedUser = JSON.parse(localStorage.getItem('user')); } catch { localStorage.removeItem('user'); }
+
 const initialState = {
     status: 'idle',
     userDetails: [],
     tempDetails: [],
     loading: false,
-    currentUser: JSON.parse(localStorage.getItem('user')) || null,
-    currentRole: (JSON.parse(localStorage.getItem('user')) || {}).role || null,
+    currentUser: savedUser || null,
+    currentRole: (savedUser || {}).role || null,
     error: null,
     response: null,
     darkMode: true

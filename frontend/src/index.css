@@ -8,9 +8,12 @@ a {
   color: inherit;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
+html { color-scheme: light; }
+body { min-width: 320px; }
+:focus-visible { outline: 3px solid #6941c6; outline-offset: 3px; }
+button, input, select, textarea { font: inherit; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
 
 :root {
   --color-bg: #1f1f38;

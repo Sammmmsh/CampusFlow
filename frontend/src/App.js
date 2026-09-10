@@ -8,12 +8,13 @@ import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import LoginPage from './pages/LoginPage';
 import AdminRegisterPage from './pages/admin/AdminRegisterPage';
 import ChooseUser from './pages/ChooseUser';
+import Operations from './ops/Operations';
 
-const App = () => {
+const LegacyApp = () => {
   const { currentRole } = useSelector(state => state.user);
 
   return (
-    <Router>
+    <>
       {currentRole === null &&
         <Routes>
           <Route path="/" element={<Homepage />} />
@@ -46,8 +47,9 @@ const App = () => {
           <TeacherDashboard />
         </>
       }
-    </Router>
+    </>
   )
 }
 
+const App = () => <Router><Routes><Route path="/ops/*" element={<Operations />} /><Route path="*" element={<LegacyApp />} /></Routes></Router>;
 export default App
