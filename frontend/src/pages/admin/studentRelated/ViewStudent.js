@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteUser, getUserDetails, updateUser } from '../../../redux/userRelated/userHandle';
+import { getUserDetails } from '../../../redux/userRelated/userHandle';
 import { useNavigate, useParams } from 'react-router-dom'
 import { getSubjectList } from '../../../redux/sclassRelated/sclassHandle';
 import { Box, Button, Collapse, IconButton, Table, TableBody, TableHead, Typography, Tab, Paper, BottomNavigation, BottomNavigationAction, Container } from '@mui/material';
@@ -21,7 +21,6 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import Popup from '../../../components/Popup';
 
 const ViewStudent = () => {
-    const [showTab, setShowTab] = useState(false);
 
     const navigate = useNavigate()
     const params = useParams()
@@ -44,9 +43,6 @@ const ViewStudent = () => {
     if (response) { console.log(response) }
     else if (error) { console.log(error) }
 
-    const [name, setName] = useState('');
-    const [rollNum, setRollNum] = useState('');
-    const [password, setPassword] = useState('');
     const [sclassName, setSclassName] = useState('');
     const [studentSchool, setStudentSchool] = useState('');
     const [subjectMarks, setSubjectMarks] = useState('');
@@ -75,31 +71,14 @@ const ViewStudent = () => {
         setSelectedSection(newSection);
     };
 
-    const fields = password === ""
-        ? { name, rollNum }
-        : { name, rollNum, password }
-
     useEffect(() => {
         if (userDetails) {
-            setName(userDetails.name || '');
-            setRollNum(userDetails.rollNum || '');
             setSclassName(userDetails.sclassName || '');
             setStudentSchool(userDetails.school || '');
             setSubjectMarks(userDetails.examResult || '');
             setSubjectAttendance(userDetails.attendance || []);
         }
     }, [userDetails]);
-
-    const submitHandler = (event) => {
-        event.preventDefault()
-        dispatch(updateUser(fields, studentID, address))
-            .then(() => {
-                dispatch(getUserDetails(studentID, address));
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
     const deleteHandler = () => {
         setMessage("Sorry the delete function has been disabled for now.")
@@ -358,40 +337,7 @@ const ViewStudent = () => {
                     Delete
                 </Button>
                 <br />
-                {/* <Button variant="contained" sx={styles.styledButton} className="show-tab" onClick={() => { setShowTab(!showTab) }}>
-                    {
-                        showTab
-                            ? <KeyboardArrowUp />
-                            : <KeyboardArrowDown />
-                    }
-                    Edit Student
-                </Button>
-                <Collapse in={showTab} timeout="auto" unmountOnExit>
-                    <div className="register">
-                        <form className="registerForm" onSubmit={submitHandler}>
-                            <span className="registerTitle">Edit Details</span>
-                            <label>Name</label>
-                            <input className="registerInput" type="text" placeholder="Enter user's name..."
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                                autoComplete="name" required />
 
-                            <label>Roll Number</label>
-                            <input className="registerInput" type="number" placeholder="Enter user's Roll Number..."
-                                value={rollNum}
-                                onChange={(event) => setRollNum(event.target.value)}
-                                required />
-
-                            <label>Password</label>
-                            <input className="registerInput" type="password" placeholder="Enter user's password..."
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                                autoComplete="new-password" />
-
-                            <button className="registerButton" type="submit" >Update</button>
-                        </form>
-                    </div>
-                </Collapse> */}
             </div>
         )
     }

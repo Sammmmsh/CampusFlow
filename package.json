@@ -1,0 +1,18 @@
+{
+  "name": "campusflow-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CampusFlow: existing academic portal plus Spring Boot equipment operations",
+  "scripts": {
+    "dev:web": "npm --prefix frontend start",
+    "build": "npm --prefix frontend run build",
+    "test:e2e": "playwright test",
+    "screenshots": "node scripts/screenshots.cjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-java": "^2.8.1"
+  }
+}
