@@ -32,6 +32,11 @@ const LoginPage = ({ role }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if (!process.env.REACT_APP_BASE_URL) {
+            setMessage("Academic sign-in is unavailable on this demo. Use Explore equipment demo to try the working campus workflow.");
+            setShowPopup(true);
+            return;
+        }
 
         if (role === "Student") {
             const rollNum = event.target.rollNumber.value;
@@ -117,7 +122,7 @@ const LoginPage = ({ role }) => {
                             {role} Login
                         </Typography>
                         <Typography variant="body1">
-                            Welcome back! Please enter your details
+                            {process.env.REACT_APP_BASE_URL ? "Welcome back! Please enter your details" : "Academic sign-in is unavailable on this demo. Explore the equipment workspace below."}
                         </Typography>
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 2 }}>
                             {role === "Student" ? (
@@ -202,6 +207,7 @@ const LoginPage = ({ role }) => {
                             </Grid>
                             <LightPurpleButton
                                 type="submit"
+                                disabled={!process.env.REACT_APP_BASE_URL}
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3 }}

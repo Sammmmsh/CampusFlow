@@ -342,7 +342,10 @@ export default function Operations() {
               <div className="cf-loading" role="status">
                 <span className="cf-loading-orbit" />
                 <h1>Opening your campus…</h1>
-                <p>Getting your equipment and requests ready.</p>
+                <p>
+                  Getting your equipment and requests ready. The demo may need a
+                  minute to wake up on your first visit.
+                </p>
               </div>
             ) : !data ? (
               <div className="cf-empty">

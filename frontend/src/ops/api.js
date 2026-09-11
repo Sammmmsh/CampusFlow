@@ -1,7 +1,10 @@
 let csrf = "";
 export async function api(path, { method = "GET", body, key } = {}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20000);
+  const timeout = setTimeout(
+    () => controller.abort(),
+    path === "/session" ? 90000 : 20000,
+  );
   try {
     const response = await fetch(`/api/ops${path}`, {
       method,

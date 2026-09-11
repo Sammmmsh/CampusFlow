@@ -34,6 +34,12 @@ export default function ChooseUser() {
           Find your place.
         </h1>
         <p>Classes, attendance and the people who keep campus running.</p>
+        {!process.env.REACT_APP_BASE_URL && (
+          <p className="cf-footnote">
+            Academic sign-in is unavailable on this demo. Explore the equipment
+            workspace below with sample campus data.
+          </p>
+        )}
         <div className="cf-choose-grid">
           {[
             {
