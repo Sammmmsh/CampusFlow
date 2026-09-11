@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2250" viewBox="0 0 1800 2250" role="img" aria-labelledby="title desc"><title id="title">CampusFlow Ops architecture and request workflow</title><desc id="desc">Students request equipment, faculty approve against inventory capacity, and inventory managers record collection and return. A Spring Boot service commits state changes, audit events and calendar jobs to a separate SQL database. Calendar deliveries can safely retry. React is deployed on Vercel; Spring Boot uses a Docker host.</desc><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#6941c6" stroke-width="1.6"/></marker></defs><rect width="1800" height="2250" fill="#f7f4fc"/><g font-family="Segoe UI,Arial,sans-serif">
+<rect x="55" y="50" width="1690" height="255" rx="30" fill="#302048" stroke="#302048"/>
+<text x="100" y="109" font-size="24" fill="#d9c9f1" font-weight="600"><tspan x="100" dy="0">CAMPUSFLOW / OPERATIONS ENGINEERING</tspan></text>
+<text x="100" y="183" font-size="51" fill="white" font-weight="650"><tspan x="100" dy="0">Small campus requests. Serious engineering.</tspan></text>
+<text x="100" y="239" font-size="27" fill="#e4d9f2" font-weight="400"><tspan x="100" dy="0">A complete equipment workflow with traceable decisions and recoverable integrations.</tspan></text>
+<rect x="70" y="336" width="42" height="42" rx="12" fill="#6941c6" stroke="#6941c6"/>
+<text x="82" y="367" font-size="22" fill="white" font-weight="700"><tspan x="82" dy="0">01</tspan></text>
+<text x="130" y="367" font-size="28" fill="#292039" font-weight="650"><tspan x="130" dy="0">PEOPLE → A CLEAR NEXT STEP</tspan></text>
+<rect x="70" y="399" width="530" height="110" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="95" y="440" font-size="23" fill="#6941c6" font-weight="700"><tspan x="95" dy="0">STUDENT</tspan></text>
+<text x="95" y="478" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="95" dy="0">Find equipment · submit a request</tspan></text>
+<rect x="635" y="399" width="530" height="110" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="660" y="440" font-size="23" fill="#6941c6" font-weight="700"><tspan x="660" dy="0">FACULTY</tspan></text>
+<text x="660" y="478" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="660" dy="0">Review purpose · approve or decline</tspan></text>
+<rect x="1200" y="399" width="530" height="110" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="1225" y="440" font-size="23" fill="#6941c6" font-weight="700"><tspan x="1225" dy="0">INVENTORY MANAGER</tspan></text>
+<text x="1225" y="478" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="1225" dy="0">Prepare · record collection · return</tspan></text>
+<rect x="70" y="555" width="284" height="116" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="93" y="601" font-size="29" fill="#292039" font-weight="650"><tspan x="93" dy="0">Request</tspan></text>
+<text x="93" y="639" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="93" dy="0">Student submits</tspan></text>
+<path d="M354 613 H400" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<rect x="414" y="555" width="284" height="116" rx="22" fill="#eee6fc" stroke="#d8cde8"/>
+<text x="437" y="601" font-size="29" fill="#292039" font-weight="650"><tspan x="437" dy="0">Approve</tspan></text>
+<text x="437" y="639" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="437" dy="0">Capacity checked</tspan></text>
+<path d="M698 613 H744" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<rect x="758" y="555" width="284" height="116" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="781" y="601" font-size="29" fill="#292039" font-weight="650"><tspan x="781" dy="0">Prepare</tspan></text>
+<text x="781" y="639" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="781" dy="0">Desk allocates</tspan></text>
+<path d="M1042 613 H1088" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<rect x="1102" y="555" width="284" height="116" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="1125" y="601" font-size="29" fill="#292039" font-weight="650"><tspan x="1125" dy="0">Collect</tspan></text>
+<text x="1125" y="639" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="1125" dy="0">Stock checked</tspan></text>
+<path d="M1386 613 H1432" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<rect x="1446" y="555" width="284" height="116" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="1469" y="601" font-size="29" fill="#292039" font-weight="650"><tspan x="1469" dy="0">Return</tspan></text>
+<text x="1469" y="639" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="1469" dy="0">Units released</tspan></text>
+<path d="M556 672 V708 H584" fill="none" stroke="#6941c6" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<text x="610" y="714" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="610" dy="0">Decline with a reason → closed · Students can cancel while pending</tspan></text>
+<rect x="70" y="759" width="42" height="42" rx="12" fill="#6941c6" stroke="#6941c6"/>
+<text x="82" y="790" font-size="22" fill="white" font-weight="700"><tspan x="82" dy="0">02</tspan></text>
+<text x="130" y="790" font-size="28" fill="#292039" font-weight="650"><tspan x="130" dy="0">APPLICATION BOUNDARIES</tspan></text>
+<rect x="70" y="825" width="440" height="405" rx="22" fill="#fff" stroke="#d8cde8"/>
+<rect x="585" y="825" width="635" height="405" rx="22" fill="#eee6fc" stroke="#d8cde8"/>
+<rect x="1295" y="825" width="435" height="405" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="100" y="873" font-size="31" fill="#292039" font-weight="650"><tspan x="100" dy="0">React workspace</tspan></text>
+<text x="100" y="916" font-size="23" fill="#6941c6" font-weight="600"><tspan x="100" dy="0">Frontend / Vercel</tspan></text>
+<text x="100" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="100" dy="0">Responsive, keyboard-friendly UI</tspan><tspan x="100" dy="32.66">Search, filters and request forms</tspan><tspan x="100" dy="32.66">Role-specific actions and history</tspan><tspan x="100" dy="32.66">Loading, error and empty states</tspan></text>
+<rect x="95" y="1139" width="390" height="58" rx="22" fill="#f6f1fc" stroke="#d8cde8"/>
+<text x="114" y="1176" font-size="22" fill="#6941c6" font-weight="600"><tspan x="114" dy="0">Same-origin /api/ops requests</tspan></text>
+<text x="615" y="873" font-size="31" fill="#292039" font-weight="650"><tspan x="615" dy="0">Java 17 + Spring Boot</tspan></text>
+<text x="615" y="916" font-size="23" fill="#6941c6" font-weight="600"><tspan x="615" dy="0">REST API / Docker service</tspan></text>
+<text x="615" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="615" dy="0">Opaque session cookie + CSRF validation</tspan><tspan x="615" dy="32.66">Workspace isolation + role checks</tspan><tspan x="615" dy="32.66">Validation + idempotent request creation</tspan><tspan x="615" dy="32.66">Transactional workflow and SQL row locks</tspan></text>
+<rect x="610" y="1139" width="585" height="58" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="630" y="1176" font-size="23" fill="#6941c6" font-weight="600"><tspan x="630" dy="0">Peak-capacity sweep over booking intervals</tspan></text>
+<text x="1325" y="873" font-size="31" fill="#292039" font-weight="650"><tspan x="1325" dy="0">SQL persistence</tspan></text>
+<text x="1325" y="916" font-size="23" fill="#6941c6" font-weight="600"><tspan x="1325" dy="0">PostgreSQL / Flyway</tspan></text>
+<text x="1325" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="1325" dy="0">workspaces · sessions</tspan><tspan x="1325" dy="32.66">equipment · requests</tspan><tspan x="1325" dy="32.66">audit_events · calendar_jobs</tspan><tspan x="1325" dy="32.66">Foreign keys + unique constraints</tspan></text>
+<rect x="1320" y="1139" width="385" height="58" rx="22" fill="#f6f1fc" stroke="#d8cde8"/>
+<text x="1340" y="1176" font-size="22" fill="#6941c6" font-weight="600"><tspan x="1340" dy="0">H2 for local development</tspan></text>
+<path d="M510 1055 H580" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<path d="M1220 1055 H1290" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<text x="524" y="1028" font-size="17" fill="#6941c6" font-weight="600"><tspan x="524" dy="0">HTTPS</tspan></text>
+<text x="1234" y="1028" font-size="17" fill="#6941c6" font-weight="600"><tspan x="1234" dy="0">JDBC</tspan></text>
+<rect x="70" y="1268" width="42" height="42" rx="12" fill="#6941c6" stroke="#6941c6"/>
+<text x="82" y="1299" font-size="22" fill="white" font-weight="700"><tspan x="82" dy="0">03</tspan></text>
+<text x="130" y="1299" font-size="28" fill="#292039" font-weight="650"><tspan x="130" dy="0">APPROVAL SAVES FIRST. INTEGRATION FOLLOWS.</tspan></text>
+<rect x="70" y="1335" width="1660" height="185" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="100" y="1382" font-size="23" fill="#6941c6" font-weight="700"><tspan x="100" dy="0">ONE DATABASE TRANSACTION</tspan></text>
+<rect x="100" y="1410" width="502" height="80" rx="14" fill="#f7f3fc" stroke="#d8cde8"/>
+<text x="118" y="1443" font-size="25" fill="#292039" font-weight="600"><tspan x="118" dy="0">Reservation state</tspan></text>
+<text x="118" y="1475" font-size="21" fill="#6b5e7a" font-weight="400"><tspan x="118" dy="0">approved</tspan></text>
+<rect x="637" y="1410" width="502" height="80" rx="14" fill="#f7f3fc" stroke="#d8cde8"/>
+<text x="655" y="1443" font-size="25" fill="#292039" font-weight="600"><tspan x="655" dy="0">Audit event</tspan></text>
+<text x="655" y="1475" font-size="21" fill="#6b5e7a" font-weight="400"><tspan x="655" dy="0">who · what · when</tspan></text>
+<rect x="1174" y="1410" width="502" height="80" rx="14" fill="#f7f3fc" stroke="#d8cde8"/>
+<text x="1192" y="1443" font-size="25" fill="#292039" font-weight="600"><tspan x="1192" dy="0">Outbox job</tspan></text>
+<text x="1192" y="1475" font-size="21" fill="#6b5e7a" font-weight="400"><tspan x="1192" dy="0">pending delivery</tspan></text>
+<path d="M300 1521 V1566" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<rect x="70" y="1570" width="460" height="163" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="94" y="1618" font-size="30" fill="#292039" font-weight="650"><tspan x="94" dy="0">Outbox worker</tspan></text>
+<text x="94" y="1661" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="94" dy="0">Scheduled delivery + manual retry</tspan><tspan x="94" dy="32.66">Job row locked during dispatch</tspan></text>
+<rect x="660" y="1570" width="460" height="163" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="684" y="1618" font-size="30" fill="#292039" font-weight="650"><tspan x="684" dy="0">Calendar adapter</tspan></text>
+<text x="684" y="1661" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="684" dy="0">Demo outage / recovery controls</tspan><tspan x="684" dy="32.66">Optional Google Calendar API</tspan></text>
+<rect x="1250" y="1570" width="480" height="163" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="1274" y="1618" font-size="30" fill="#292039" font-weight="650"><tspan x="1274" dy="0">Delivery recorded</tspan></text>
+<text x="1274" y="1661" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="1274" dy="0">Success → synced + event ID</tspan><tspan x="1274" dy="32.66">Failure → retained for retry</tspan></text>
+<path d="M530 1650 H650" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<path d="M1120 1650 H1240" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
+<path d="M1490 1733 V1797 H300 V1735" fill="none" stroke="#6941c6" stroke-width="3" stroke-dasharray="9 7" marker-end="url(#arrow)"/>
+<text x="425" y="1782" font-size="24" fill="#6941c6" font-weight="600"><tspan x="425" dy="0">Same event ID on every attempt → safe retries after a lost response</tspan></text>
+<rect x="70" y="1854" width="42" height="42" rx="12" fill="#6941c6" stroke="#6941c6"/>
+<text x="82" y="1885" font-size="22" fill="white" font-weight="700"><tspan x="82" dy="0">04</tspan></text>
+<text x="130" y="1885" font-size="28" fill="#292039" font-weight="650"><tspan x="130" dy="0">EVIDENCE YOU CAN INSPECT</tspan></text>
+<rect x="70" y="1921" width="810" height="218" rx="22" fill="#fff" stroke="#d8cde8"/>
+<rect x="920" y="1921" width="810" height="218" rx="22" fill="#fff" stroke="#d8cde8"/>
+<text x="100" y="1967" font-size="29" fill="#292039" font-weight="650"><tspan x="100" dy="0">Test the awkward paths</tspan></text>
+<text x="100" y="2012" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="100" dy="0">Concurrent approvals · adjacent reservations · late returns</tspan><tspan x="100" dy="32.66">Cross-workspace access · forged sessions · CSRF</tspan><tspan x="100" dy="32.66">Full browser journey · mobile layout · axe checks</tspan></text>
+<text x="950" y="1967" font-size="29" fill="#292039" font-weight="650"><tspan x="950" dy="0">Keep boundaries honest</tspan></text>
+<text x="950" y="2012" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="950" dy="0">Demo people and roles are explicitly simulated.</tspan><tspan x="950" dy="32.66">Google Calendar live mode needs separate credentials.</tspan><tspan x="950" dy="32.66">Original academic portal / MongoDB stays separate.</tspan></text>
+<text x="70" y="2191" font-size="27" fill="#292039" font-weight="600"><tspan x="70" dy="0">Built around campus life. Designed to explain, test and recover.</tspan></text>
+<text x="70" y="2226" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="70" dy="0">React · Java · Spring Security · REST · JDBC / SQL · Flyway · PostgreSQL · Playwright</tspan></text>
+</g></svg>

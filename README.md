@@ -1,73 +1,158 @@
+# CampusFlow
 
-## 📋 Description
+**Less chasing. More campus life.**
 
-The CampusFlow is a powerful application built with the MERN stack. This tool helps you streamline various aspects of campus management, including class organization, student and faculty management, attendance tracking, and performance assessments. You can easily access student records, view marks, and communicate effectively within your campus community.
+CampusFlow brings equipment requests, faculty decisions and inventory handoffs into one workspace. It extends the original academic portal with a Java / Spring Boot operations service, while preserving the separate Express / MongoDB application.
 
-## 🛠️ Features
+![CampusFlow operations overview](docs/screenshots/overview.png)
 
-- **Class Management:** Organize and manage classes effortlessly.
-- **Student Management:** Add and track students and their performance.
-- **Attendance Tracking:** Monitor attendance in real-time.
-- **Performance Assessment:** Evaluate student performance with ease.
-- **User-Friendly Interface:** Built with Material-UI for a clean and intuitive user experience.
+## Try the complete story
 
-## 📅 Requirements
+1. Open **Operations** and explore the sample equipment as a student.
+2. Submit a request with a purpose, quantity and collection / return times.
+3. Switch the demo role to **Faculty approver** and review the request.
+4. Switch to **Inventory manager** to prepare equipment, record collection and confirm its return.
+5. Open **Activity** to inspect the recorded handoffs.
+6. In **Integrations**, simulate a calendar outage, approve a request, and retry its calendar job. The approval survives the outage; recovery updates the same job.
 
-To use the CampusFlow, you need:
+Each browser session receives a separate SQL workspace with sample people and inventory. The role switcher is intentionally a demonstration control, **not production campus authentication**. No signup or shared guest password is required. Sample workspaces expire after seven days and session cookies after one day.
 
-- A computer with Windows, macOS, or Linux.
-- Internet access for software updates and downloads.
-- At least 4GB of RAM.
-- 500MB of available hard drive space.
-- A modern web browser like Google Chrome, Firefox, or Safari.
+## What makes the workflow reliable
 
-## 🚀 Getting Started
+- **Reservation correctness:** faculty approval locks the equipment row and checks peak simultaneous demand across half-open time intervals. Adjacent bookings can share capacity without being incorrectly counted together.
+- **Physical stock checks:** equipment that is still checked out cannot be collected again, even if its original booking window has ended.
+- **Explicit state transitions:** the API checks role, workspace and current status for every mutation. Invalid handoffs return a conflict rather than silently overwriting state.
+- **Safe submission retries:** an `Idempotency-Key` returns the original request for an identical payload and rejects reuse with a different payload.
+- **Atomic audit and outbox writes:** approval, its audit event and a pending calendar job commit together. A calendar outage cannot undo an approved booking.
+- **Recoverable delivery:** a scheduled worker and manual retry reuse a deterministic calendar event ID. Failed jobs remain inspectable; successful jobs are not resent.
+- **Accessible interface:** visible focus, labelled forms, keyboard-operable dialogs, reduced-motion support, responsive navigation and automated axe checks.
 
-Follow these steps to download and set up the CampusFlow:
+![Equipment catalogue](docs/screenshots/equipment.png)
 
-1. Click the button above or visit the following link to access the Releases page:
-2. On the Releases page, you'll see the latest version of the application.
-3. Click on the version number to view the details and available files for download.
-4. Look for the release file that matches your operating system and click to download it.
+![Faculty request review](docs/screenshots/request-review.png)
 
+![Calendar outage with preserved approval and retry controls](docs/screenshots/calendar-recovery.png)
 
-### Installation Steps
+## Architecture
 
-1. After downloading the file, locate it in your downloads folder.
-2. If you are using Windows, double-click the `.exe` file to run the installer.
-3. On macOS, open the downloaded `.dmg` file and drag the application to your Applications folder.
-4. For Linux, extract the downloaded files and run the installer using the terminal.
+```mermaid
+flowchart LR
+    U[Student / Faculty / Inventory] --> R[React workspace]
+    R -->|same-origin REST requests| V[Vercel rewrite]
+    V --> J[Spring Boot / Spring Security]
+    J --> W[Transactional workflow service]
+    W -->|JDBC + row locks| DB[(PostgreSQL)]
+    W --> A[Audit events]
+    W --> O[Calendar outbox]
+    A --> DB
+    O --> DB
+    DB --> Q[Scheduled outbox worker]
+    Q --> C[Calendar dispatcher]
+    C --> D[Demo provider]
+    C -. configured explicitly .-> G[Google Calendar API]
+    L[Original academic portal] --> E[Existing Express service]
+    E --> M[(Existing MongoDB)]
+```
 
-## 📚 Usage Guide
+The operations service uses **Java 17, Spring Boot 3.5, Spring Security, REST, JDBC, SQL, Flyway and PostgreSQL**. Local development defaults to a separate H2 database in PostgreSQL compatibility mode. React, Material UI and the original campus illustration keep the interface connected to the existing project.
 
-Once installed, open the application. You will see an easy-to-navigate dashboard. Here’s a brief overview of how to use the main features:
+The original MongoDB database is neither migrated nor modified by the operations service. Its academic routes remain available, but require their original Express service and MongoDB configuration.
 
-- **Add Students:** Click on the "Students" section and select "Add Student." Fill in the required information and save.
-- **Track Attendance:** Go to the "Attendance" section to mark students present or absent for each class.
-- **Assess Performance:** Access the "Assessments" section to view student scores and provide feedback.
-- **Manage Classes:** In the "Classes" section, you can add or modify classes and assign students.
+## Run locally
 
-## 🛠️ Troubleshooting
+Requirements: Java 17+, Node.js 20+ and Maven 3.9+ (or the included Maven wrapper). Browser checks use Google Chrome.
 
-If you experience any issues during the installation or while using the application, consider the following steps:
+```sh
+# From the repository root
+npm ci
+npm --prefix frontend ci
 
-- Ensure your computer meets the minimum requirements listed above.
-- Make sure you have a stable internet connection.
-- Restart the application if it becomes unresponsive.
-- Check for updates from the Releases page to ensure you are using the latest version.
+# Terminal 1: build and start the operations API
+cd ops-service
+./mvnw clean package
+java -jar target/ops-service-1.0.0.jar
 
-## 📝 Topics
+# Terminal 2: from the repository root
+npm run dev:web
+```
 
-- admin-dashboard
-- attendence-tracking
-- class-management
-- material-ui
-- mern
-- mern-stack
-- nodejs
-- performance-assessment
-- reactjs
-- campus-management-system
-- student-management
+On Windows, use `mvnw.cmd` in place of `./mvnw`. If your system's wrapper download is blocked, run the same goals with an installed Maven: `mvn clean package`.
 
-Enjoy managing your campus with the CampusFlow!
+Open **http://localhost:3000/ops**. The development proxy forwards `/api/ops` to **http://localhost:8080**. The original academic backend is optional for the operations demo and is not started by these commands.
+
+### Use PostgreSQL
+
+Create a **new, empty operations database** and export these environment variables before starting Java:
+
+```dotenv
+JDBC_DATABASE_URL=jdbc:postgresql://localhost:5432/campusflow_ops
+DATABASE_USERNAME=campusflow
+DATABASE_PASSWORD=your-local-database-password
+APP_ORIGIN=http://localhost:3000
+COOKIE_SECURE=false
+DEMO_ENABLED=true
+```
+
+Spring Boot reads process environment variables; it does not automatically load `.env` files. `ops-service/.env.example` documents the settings. Flyway creates the operations schema on startup. Never point these settings at the original MongoDB service or an unrelated database.
+
+## Verification
+
+```sh
+# Java integration tests (H2 by default)
+cd ops-service
+./mvnw test
+
+# From the repository root, with both local services running
+npm run test:e2e
+npm run build
+
+# Reproduce the actual app screenshots and shareable diagram
+npm run screenshots
+node scripts/workflow.cjs
+```
+
+The Java suite checks lifecycle history, permissions, CSRF, cookie handling, workspace isolation, idempotency, simultaneous approvals, adjacent bookings, outstanding collections, input limits and calendar recovery. The browser suite exercises the full request-to-return journey, API permissions, outage recovery, search, mobile layout, dialog focus and accessibility scans.
+
+`TEST_DATABASE_URL` switches the integration tests to a disposable PostgreSQL database; set `DATABASE_USERNAME` and `DATABASE_PASSWORD` for that database too. The CI workflow runs the Java suite against PostgreSQL and the browser suite against the local application. Test users and data are synthetic. Do not run this suite against a database containing real campus information.
+
+Automated accessibility scans are useful regression checks, not a claim of comprehensive WCAG certification. Local verification details and deployment status are recorded in [the deployment guide](docs/DEPLOYMENT.md).
+
+## API and implementation guide
+
+| Operation                   | Endpoint                                                      | Demo role                               |
+| --------------------------- | ------------------------------------------------------------- | --------------------------------------- |
+| Start / read session        | `POST /api/ops/session`, `GET /api/ops/session`               | Public bootstrap / signed-in session    |
+| Change demo role            | `POST /api/ops/session/role`                                  | Current demo session                    |
+| Read workspace              | `GET /api/ops/dashboard`                                      | Any demo role                           |
+| Submit request              | `POST /api/ops/requests`                                      | Student                                 |
+| Approve / reject            | `POST /api/ops/requests/{id}/approve` or `/reject`            | Faculty                                 |
+| Allocate / collect / return | `POST /api/ops/requests/{id}/allocate`, `/collect`, `/return` | Inventory                               |
+| Cancel pending request      | `POST /api/ops/requests/{id}/cancel`                          | Requester                               |
+| Simulate calendar outage    | `POST /api/ops/integrations/failure`                          | Faculty / inventory; demo calendar only |
+| Retry delivery              | `POST /api/ops/integrations/retry`                            | Faculty / inventory                     |
+
+Session bootstrap requires `X-CampusFlow: 1`. Subsequent writes require the synchronizer token returned by the session endpoint in `X-CSRF-Token`. Session tokens are opaque, stored hashed in SQL and sent in HttpOnly cookies. Production cookies must use `COOKIE_SECURE=true`.
+
+Start with these files if you are learning the implementation:
+
+- [`Operations.js`](frontend/src/ops/Operations.js): state, accessible UI and role-specific actions.
+- [`api.js`](frontend/src/ops/api.js): sessions, CSRF, timeouts and submission keys.
+- [`WorkflowService.java`](ops-service/src/main/java/dev/campusflow/ops/WorkflowService.java): transactions, reservation algorithm and state machine.
+- [`SecurityConfig.java`](ops-service/src/main/java/dev/campusflow/ops/SecurityConfig.java): origin, session and CSRF checks.
+- [`CalendarDispatcher.java`](ops-service/src/main/java/dev/campusflow/ops/CalendarDispatcher.java): delivery, deterministic event IDs and recovery.
+- [`V1__operations.sql`](ops-service/src/main/resources/db/migration/V1__operations.sql): schema, constraints and indexes.
+- [`WorkflowIntegrationTest.java`](ops-service/src/test/java/dev/campusflow/ops/WorkflowIntegrationTest.java): executable examples of business rules.
+
+## Integration boundaries
+
+The default calendar is an explicit simulator, so exploring the public demo sends **no external calendar events**. A dedicated test Google Calendar can be enabled with `GOOGLE_CALENDAR_ID` and `GOOGLE_CALENDAR_ACCESS_TOKEN`. The token needs permission to create events and must be replaced when it expires; OAuth consent and token refresh are not implemented. The live Google provider must be verified with your own test credentials before use. Manual retries remain available after the worker's three automatic attempts.
+
+The public demo caps workspace creation and requests, uses expiring sessions and keeps each workspace isolated. A real campus rollout still needs institutional identity / SSO, real user-to-role assignments, operator provisioning, rate limiting, monitoring, backup policies and a separately reviewed integration credential flow. Setting `DEMO_ENABLED=false` disables new demo sessions; it does not install an identity provider.
+
+## Share the design
+
+[LinkedIn-ready PNG](docs/social/campusflow-workflow.png) · [Editable SVG](docs/social/campusflow-workflow.svg) · [Deployment guide](docs/DEPLOYMENT.md)
+
+![CampusFlow workflow and architecture](docs/social/campusflow-workflow.png)
+
+The diagram describes the implemented workflow and its boundaries. Screenshots are captured from the running application with sample data, not design mockups.
