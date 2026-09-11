@@ -2,6 +2,10 @@
 
 **Less chasing. More campus life.**
 
+[Open the live demo](https://campusflow-ops.vercel.app) · [Try the operations workspace](https://campusflow-ops.vercel.app/ops) · [Deployment notes](docs/DEPLOYMENT.md)
+
+The free service may need a minute to wake up. This temporary demo's free PostgreSQL database expires on **11 October 2026**; see the deployment notes for hosting limits.
+
 CampusFlow brings equipment requests, faculty decisions and inventory handoffs into one workspace. It extends the original academic portal with a Java / Spring Boot operations service, while preserving the separate Express / MongoDB application.
 
 ![CampusFlow operations overview](docs/screenshots/overview.png)

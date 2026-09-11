@@ -36,4 +36,7 @@ Use actual test results and real screenshots. Sample data, demo integration simu
 - `1cfec36`: browser tests, keyboard/contrast fixes and old React warning cleanup.
 - `3f48468`: peak reservation algorithm, physical handoff checks and isolated tests.
 
-The new history was pushed as a fast-forward to the existing remote `main` branch. Original commits and their dates are preserved. Documentation, screenshots, CI and the workflow diagram form the next milestone. The final deployment needs the new PostgreSQL password placed in its own Render service, then live checks through Vercel. No database migration from MongoDB is involved.
+- `2a88f3c`: real screenshots, reproducible workflow graphic, CI and deployment runbook.
+- `ba4b414`: Vercel same-origin proxy, cold-start loading and explicit academic demo boundaries.
+
+The new history is pushed as a fast-forward to the existing remote `main` branch. Original commits and their dates are preserved. The frontend is deployed to Vercel and Spring Boot is connected to a separate Render PostgreSQL database. No database migration from MongoDB is involved. See `DEPLOYMENT.md` for verification evidence and hosting limits.
