@@ -10,7 +10,7 @@ CampusFlow brings equipment requests, faculty decisions and inventory handoffs i
 
 ![CampusFlow operations overview](docs/screenshots/overview.png)
 
-## Try the complete story
+## Equipment workflow
 
 1. Open **Operations** and explore the sample equipment as a student.
 2. Submit a request with a purpose, quantity and collection / return times.
@@ -21,7 +21,7 @@ CampusFlow brings equipment requests, faculty decisions and inventory handoffs i
 
 Each browser session receives a separate SQL workspace with sample people and inventory. The role switcher is intentionally a demonstration control, **not production campus authentication**. No signup or shared guest password is required. Sample workspaces expire after seven days and session cookies after one day.
 
-## What makes the workflow reliable
+## Workflow rules
 
 - **Reservation correctness:** faculty approval locks the equipment row and checks peak simultaneous demand across half-open time intervals. Adjacent bookings can share capacity without being incorrectly counted together.
 - **Physical stock checks:** equipment that is still checked out cannot be collected again, even if its original booking window has ended.
@@ -110,7 +110,7 @@ cd ops-service
 npm run test:e2e
 npm run build
 
-# Reproduce the actual app screenshots and shareable diagram
+# Generate screenshots and the workflow diagram
 npm run screenshots
 node scripts/workflow.cjs
 ```
@@ -121,7 +121,7 @@ The Java suite checks lifecycle history, permissions, CSRF, cookie handling, wor
 
 Automated accessibility scans are useful regression checks, not a claim of comprehensive WCAG certification. Local verification details and deployment status are recorded in [the deployment guide](docs/DEPLOYMENT.md).
 
-## API and implementation guide
+## API
 
 | Operation                   | Endpoint                                                      | Demo role                               |
 | --------------------------- | ------------------------------------------------------------- | --------------------------------------- |
@@ -137,7 +137,7 @@ Automated accessibility scans are useful regression checks, not a claim of compr
 
 Session bootstrap requires `X-CampusFlow: 1`. Subsequent writes require the synchronizer token returned by the session endpoint in `X-CSRF-Token`. Session tokens are opaque, stored hashed in SQL and sent in HttpOnly cookies. Production cookies must use `COOKIE_SECURE=true`.
 
-Start with these files if you are learning the implementation:
+Source files:
 
 - [`Operations.js`](frontend/src/ops/Operations.js): state, accessible UI and role-specific actions.
 - [`api.js`](frontend/src/ops/api.js): sessions, CSRF, timeouts and submission keys.
@@ -153,9 +153,9 @@ The default calendar is an explicit simulator, so exploring the public demo send
 
 The public demo caps workspace creation and requests, uses expiring sessions and keeps each workspace isolated. A real campus rollout still needs institutional identity / SSO, real user-to-role assignments, operator provisioning, rate limiting, monitoring, backup policies and a separately reviewed integration credential flow. Setting `DEMO_ENABLED=false` disables new demo sessions; it does not install an identity provider.
 
-## Share the design
+## Workflow diagram
 
-[LinkedIn-ready PNG](docs/social/campusflow-workflow.png) · [Editable SVG](docs/social/campusflow-workflow.svg) · [Deployment guide](docs/DEPLOYMENT.md)
+[PNG](docs/social/campusflow-workflow.png) · [Editable SVG](docs/social/campusflow-workflow.svg) · [Deployment guide](docs/DEPLOYMENT.md)
 
 ![CampusFlow workflow and architecture](docs/social/campusflow-workflow.png)
 
