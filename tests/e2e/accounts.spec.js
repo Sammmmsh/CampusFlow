@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const AxeBuilder = require("@axe-core/playwright").default;
-const password = "CampusFlow-test-password-42";
+const password = require("node:crypto").randomBytes(24).toString("base64url");
 const email = () =>
   `test-${Date.now()}-${Math.random().toString(16).slice(2)}@example.test`;
 
@@ -20,6 +20,13 @@ test("account owner invites a student, enforces role and restores saved bookings
   await page.getByLabel("Password", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Create my workspace" }).click();
   await expect(page.getByLabel("Workspace role")).toHaveValue("faculty");
+  const sessionCookie = (await page.context().cookies()).find(
+    (cookie) => cookie.name === "cf_ops",
+  );
+  expect(Boolean(sessionCookie?.httpOnly)).toBe(true);
+  expect(sessionCookie?.sameSite).toBe("Lax");
+  if (page.url().startsWith("https:"))
+    expect(Boolean(sessionCookie?.secure)).toBe(true);
   await page.getByRole("button", { name: "Account", exact: true }).click();
   await page.getByLabel("Teammate email").fill(memberEmail);
   await page.getByRole("button", { name: "Create invitation" }).click();

@@ -18,6 +18,9 @@ const baseURL = process.env.BASE_URL || "http://localhost:3000";
   };
   await page.goto(baseURL);
   await capture("welcome");
+  await page.goto(baseURL + "/ops/sign-in");
+  await page.getByRole("heading", { name: "Good to see you again." }).waitFor();
+  await capture("sign-in");
   await page.goto(baseURL + "/ops");
   await page.getByLabel("Demo role").waitFor();
   await capture("overview");
@@ -51,7 +54,7 @@ const baseURL = process.env.BASE_URL || "http://localhost:3000";
   await capture("mobile");
   await browser.close();
   console.log(
-    "Saved seven screenshots from the running Spring Boot-backed application.",
+    "Saved eight screenshots from the running Spring Boot-backed application.",
   );
 })().catch((error) => {
   console.error(error);

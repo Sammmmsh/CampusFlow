@@ -1,0 +1,42 @@
+name: Live deployment check
+on:
+  workflow_dispatch:
+    inputs:
+      allow_test_data:
+        description: Create fictional accounts and isolated demo bookings on the live site
+        required: true
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: campusflow-live-check
+  cancel-in-progress: false
+jobs:
+  live:
+    if: inputs.allow_test_data
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      E2E_BASE_URL: https://campusflow-ops.vercel.app
+      BASE_URL: https://campusflow-ops.vercel.app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chrome
+      - name: Wait for the free Java service to wake
+        run: curl --fail --silent --show-error --retry 2 --retry-delay 5 --max-time 120 https://campusflow-ops.onrender.com/actuator/health
+      - name: Verify live account and equipment workflows
+        run: npx playwright test --trace=off
+      - name: Capture current application screenshots
+        run: npm run screenshots
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: campusflow-live-screenshots
+          path: docs/screenshots/*.png
+          retention-days: 7
