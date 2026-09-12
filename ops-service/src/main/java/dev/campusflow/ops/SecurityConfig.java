@@ -22,6 +22,7 @@ public class SecurityConfig {
   SecurityFilterChain chain(
     HttpSecurity http,
     SessionService sessions,
+    ActivityWindow activity,
     ObjectMapper json,
     @Value("${ops.allowed-origin}") String origin
   ) throws Exception {
@@ -50,6 +51,8 @@ public class SecurityConfig {
               return;
             }
             try {
+              activity.touch();
+              res.setHeader("Cache-Control", "no-store");
               boolean write = !List.of("GET", "HEAD", "OPTIONS").contains(
                 req.getMethod()
               );
@@ -63,7 +66,11 @@ public class SecurityConfig {
                 "This origin is not allowed."
               );
               boolean bootstrap =
-                path.equals("/api/ops/session") &&
+                List.of(
+                  "/api/ops/session",
+                  "/api/ops/auth/login",
+                  "/api/ops/auth/register"
+                ).contains(path) &&
                 req.getMethod().equals("POST");
               if (bootstrap) {
                 if (

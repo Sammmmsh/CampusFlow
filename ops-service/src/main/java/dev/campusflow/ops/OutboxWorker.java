@@ -10,10 +10,16 @@ public class OutboxWorker {
 
   final CalendarDispatcher dispatcher;
   final JdbcTemplate db;
+  final ActivityWindow activity;
 
-  public OutboxWorker(CalendarDispatcher dispatcher, JdbcTemplate db) {
+  public OutboxWorker(
+    CalendarDispatcher dispatcher,
+    JdbcTemplate db,
+    ActivityWindow activity
+  ) {
     this.dispatcher = dispatcher;
     this.db = db;
+    this.activity = activity;
   }
 
   @Scheduled(
@@ -21,6 +27,7 @@ public class OutboxWorker {
     initialDelayString = "${ops.dispatch-delay}"
   )
   public void poll() {
+    if (!activity.active()) return;
     var ids = db.queryForList(
       "SELECT id FROM calendar_jobs WHERE state IN ('pending','failed') AND attempts < 3 ORDER BY updated_at LIMIT 10",
       String.class

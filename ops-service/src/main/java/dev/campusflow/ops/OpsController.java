@@ -43,6 +43,16 @@ public class OpsController {
     return (Map<String, Object>) r.getAttribute("opsSession");
   }
 
+  String name(Map<String, Object> s) {
+    return s.get("account_id") == null
+      ? actor(s.get("role").toString())
+      : s.get("account_name").toString();
+  }
+
+  String accountId(Map<String, Object> s) {
+    return s.get("account_id") == null ? null : s.get("account_id").toString();
+  }
+
   @PostMapping("/session")
   public Map<String, Object> start(
     @RequestBody Map<String, String> b,
@@ -73,9 +83,11 @@ public class OpsController {
       "csrf",
       s.get("csrf"),
       "name",
-      actor(s.get("role").toString()),
+      name(s),
       "demo",
-      true
+      s.get("account_id") == null,
+      "owner",
+      Boolean.TRUE.equals(s.get("is_owner"))
     );
   }
 
@@ -84,7 +96,11 @@ public class OpsController {
     @RequestBody Map<String, String> b,
     HttpServletRequest req
   ) {
-    require(demo, FORBIDDEN, "Demo role switching is disabled.");
+    require(
+      session(req).get("account_id") != null || demo,
+      FORBIDDEN,
+      "Demo role switching is disabled."
+    );
     sessions.role(session(req), b.getOrDefault("role", ""));
     return Map.of("ok", true);
   }
@@ -96,6 +112,13 @@ public class OpsController {
       flow.snapshot(s.get("workspace_id").toString(), s.get("role").toString())
     );
     data.put("calendarMode", dispatcher.mode());
+    data.put("name", name(s));
+    data.put("demo", s.get("account_id") == null);
+    data.put("owner", Boolean.TRUE.equals(s.get("is_owner")));
+    data.put(
+      "accountId",
+      s.get("account_id") == null ? "" : s.get("account_id")
+    );
     data.put(
       "calendarFailure",
       db.queryForObject(
@@ -119,7 +142,9 @@ public class OpsController {
       s.get("workspace_id").toString(),
       s.get("role").toString(),
       body,
-      key
+      key,
+      name(s),
+      accountId(s)
     );
   }
 
@@ -136,7 +161,9 @@ public class OpsController {
       s.get("role").toString(),
       id,
       action,
-      b.getOrDefault("note", "")
+      b.getOrDefault("note", ""),
+      name(s),
+      accountId(s)
     );
   }
 

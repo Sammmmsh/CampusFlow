@@ -190,7 +190,7 @@ public class WorkflowService {
       .atTime(10, 0)
       .toInstant(ZoneOffset.UTC);
     db.update(
-      "INSERT INTO requests VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO requests(id,workspace_id,equipment_id,title,purpose,requester,quantity,starts_at,ends_at,status,created_at,updated_at,decision_note,idempotency_key) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
       rid,
       ws,
       equipment,
@@ -285,6 +285,18 @@ public class WorkflowService {
     CreateRequest b,
     String key
   ) {
+    return create(ws, role, b, key, actor(role), null);
+  }
+
+  @Transactional
+  public Map<String, Object> create(
+    String ws,
+    String role,
+    CreateRequest b,
+    String key,
+    String name,
+    String accountId
+  ) {
     require(
       role.equals("student"),
       FORBIDDEN,
@@ -305,7 +317,8 @@ public class WorkflowService {
     if (!existing.isEmpty()) {
       var r = existing.get(0);
       require(
-        r.get("title").equals(b.title().trim()) &&
+        Objects.equals(r.get("requester_id"), accountId) &&
+          r.get("title").equals(b.title().trim()) &&
           r.get("purpose").equals(b.purpose().trim()) &&
           ((Number) r.get("equipment_id")).intValue() == b.equipmentId() &&
           ((Number) r.get("quantity")).intValue() == b.quantity() &&
@@ -353,18 +366,18 @@ public class WorkflowService {
     require(
       count < 200,
       TOO_MANY_REQUESTS,
-      "This demo has reached 200 requests. Start a new workspace."
+      "This workspace has reached its 200-request limit."
     );
     String rid = id(),
       stamp = now();
     db.update(
-      "INSERT INTO requests VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO requests(id,workspace_id,equipment_id,title,purpose,requester,quantity,starts_at,ends_at,status,created_at,updated_at,decision_note,idempotency_key,requester_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
       rid,
       ws,
       b.equipmentId(),
       b.title().trim(),
       b.purpose().trim(),
-      actor(role),
+      name,
       b.quantity(),
       time(b.startsAt()),
       time(b.endsAt()),
@@ -372,12 +385,13 @@ public class WorkflowService {
       stamp,
       stamp,
       "",
-      key
+      key,
+      accountId
     );
     audit(
       ws,
       rid,
-      actor(role),
+      name,
       "created",
       "Requested " + b.quantity() + " × " + eq.get("name") + "."
     );
@@ -391,6 +405,19 @@ public class WorkflowService {
     String rid,
     String action,
     String note
+  ) {
+    return act(ws, role, rid, action, note, actor(role), null);
+  }
+
+  @Transactional
+  public Map<String, Object> act(
+    String ws,
+    String role,
+    String rid,
+    String action,
+    String note,
+    String name,
+    String accountId
   ) {
     // Every transition obtains equipment then request lock in the same order.
     var before = one(
@@ -507,7 +534,10 @@ public class WorkflowService {
       }
       case "cancel" -> {
         require(
-          role.equals("student") && r.get("requester").equals(actor(role)),
+          role.equals("student") &&
+            (accountId == null
+              ? r.get("requester_id") == null && r.get("requester").equals(name)
+              : accountId.equals(r.get("requester_id"))),
           FORBIDDEN,
           "Only the requester can cancel."
         );
@@ -539,7 +569,7 @@ public class WorkflowService {
     audit(
       ws,
       rid,
-      actor(role),
+      name,
       to,
       reason.isEmpty()
         ? "Request moved from " + from + " to " + to + "."
