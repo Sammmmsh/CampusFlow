@@ -97,8 +97,8 @@ text(
   615,
   968,
   [
-    "Opaque session cookie + CSRF validation",
-    "Workspace isolation + role checks",
+    "BCrypt accounts + cookie / CSRF validation",
+    "Invited roles + workspace isolation",
     "Validation + idempotent request creation",
     "Transactional workflow and SQL row locks",
   ],
@@ -108,12 +108,13 @@ text(
 rect(610, 1139, 585, 58, "#fff");
 text(630, 1176, "Peak-capacity sweep over booking intervals", 23, purple, 600);
 text(1325, 873, "SQL persistence", 31, ink, 650);
-text(1325, 916, "PostgreSQL / Flyway", 23, purple, 600);
+text(1325, 916, "Neon PostgreSQL / Flyway", 23, purple, 600);
 text(
   1325,
   968,
   [
     "workspaces · sessions",
+    "accounts · invitations",
     "equipment · requests",
     "audit_events · calendar_jobs",
     "Foreign keys + unique constraints",
@@ -146,7 +147,7 @@ const jobs = [
     x: 70,
     w: 460,
     t: "Outbox worker",
-    b: ["Scheduled delivery + manual retry", "Job row locked during dispatch"],
+    b: ["Active-window polling + manual retry", "Job row locked during dispatch"],
   },
   {
     x: 660,
@@ -197,7 +198,7 @@ text(
   950,
   2012,
   [
-    "Demo people and roles are explicitly simulated.",
+    "Accounts and sample workspaces stay separate.",
     "Google Calendar live mode needs separate credentials.",
     "Original academic portal / MongoDB stays separate.",
   ],
@@ -235,7 +236,7 @@ fs.writeFileSync(`${out}/campusflow-workflow.svg`, parts.join("\n"));
     fullPage: true,
   });
   await browser.close();
-  console.log("Workflow SVG and LinkedIn-ready PNG generated.");
+  console.log("Workflow SVG and PNG generated.");
 })().catch((e) => {
   console.error(e);
   process.exitCode = 1;

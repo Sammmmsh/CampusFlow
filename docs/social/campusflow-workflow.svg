@@ -49,12 +49,12 @@
 <text x="114" y="1176" font-size="22" fill="#6941c6" font-weight="600"><tspan x="114" dy="0">Same-origin /api/ops requests</tspan></text>
 <text x="615" y="873" font-size="31" fill="#292039" font-weight="650"><tspan x="615" dy="0">Java 17 + Spring Boot</tspan></text>
 <text x="615" y="916" font-size="23" fill="#6941c6" font-weight="600"><tspan x="615" dy="0">REST API / Docker service</tspan></text>
-<text x="615" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="615" dy="0">Opaque session cookie + CSRF validation</tspan><tspan x="615" dy="32.66">Workspace isolation + role checks</tspan><tspan x="615" dy="32.66">Validation + idempotent request creation</tspan><tspan x="615" dy="32.66">Transactional workflow and SQL row locks</tspan></text>
+<text x="615" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="615" dy="0">BCrypt accounts + cookie / CSRF validation</tspan><tspan x="615" dy="32.66">Invited roles + workspace isolation</tspan><tspan x="615" dy="32.66">Validation + idempotent request creation</tspan><tspan x="615" dy="32.66">Transactional workflow and SQL row locks</tspan></text>
 <rect x="610" y="1139" width="585" height="58" rx="22" fill="#fff" stroke="#d8cde8"/>
 <text x="630" y="1176" font-size="23" fill="#6941c6" font-weight="600"><tspan x="630" dy="0">Peak-capacity sweep over booking intervals</tspan></text>
 <text x="1325" y="873" font-size="31" fill="#292039" font-weight="650"><tspan x="1325" dy="0">SQL persistence</tspan></text>
-<text x="1325" y="916" font-size="23" fill="#6941c6" font-weight="600"><tspan x="1325" dy="0">PostgreSQL / Flyway</tspan></text>
-<text x="1325" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="1325" dy="0">workspaces · sessions</tspan><tspan x="1325" dy="32.66">equipment · requests</tspan><tspan x="1325" dy="32.66">audit_events · calendar_jobs</tspan><tspan x="1325" dy="32.66">Foreign keys + unique constraints</tspan></text>
+<text x="1325" y="916" font-size="23" fill="#6941c6" font-weight="600"><tspan x="1325" dy="0">Neon PostgreSQL / Flyway</tspan></text>
+<text x="1325" y="968" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="1325" dy="0">workspaces · sessions</tspan><tspan x="1325" dy="32.66">accounts · invitations</tspan><tspan x="1325" dy="32.66">equipment · requests</tspan><tspan x="1325" dy="32.66">audit_events · calendar_jobs</tspan><tspan x="1325" dy="32.66">Foreign keys + unique constraints</tspan></text>
 <rect x="1320" y="1139" width="385" height="58" rx="22" fill="#f6f1fc" stroke="#d8cde8"/>
 <text x="1340" y="1176" font-size="22" fill="#6941c6" font-weight="600"><tspan x="1340" dy="0">H2 for local development</tspan></text>
 <path d="M510 1055 H580" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
@@ -78,7 +78,7 @@
 <path d="M300 1521 V1566" fill="none" stroke="#6941c6" stroke-width="3"  marker-end="url(#arrow)"/>
 <rect x="70" y="1570" width="460" height="163" rx="22" fill="#fff" stroke="#d8cde8"/>
 <text x="94" y="1618" font-size="30" fill="#292039" font-weight="650"><tspan x="94" dy="0">Outbox worker</tspan></text>
-<text x="94" y="1661" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="94" dy="0">Scheduled delivery + manual retry</tspan><tspan x="94" dy="32.66">Job row locked during dispatch</tspan></text>
+<text x="94" y="1661" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="94" dy="0">Active-window polling + manual retry</tspan><tspan x="94" dy="32.66">Job row locked during dispatch</tspan></text>
 <rect x="660" y="1570" width="460" height="163" rx="22" fill="#fff" stroke="#d8cde8"/>
 <text x="684" y="1618" font-size="30" fill="#292039" font-weight="650"><tspan x="684" dy="0">Calendar adapter</tspan></text>
 <text x="684" y="1661" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="684" dy="0">Demo outage / recovery controls</tspan><tspan x="684" dy="32.66">Optional Google Calendar API</tspan></text>
@@ -97,7 +97,7 @@
 <text x="100" y="1967" font-size="29" fill="#292039" font-weight="650"><tspan x="100" dy="0">Test the awkward paths</tspan></text>
 <text x="100" y="2012" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="100" dy="0">Concurrent approvals · adjacent reservations · late returns</tspan><tspan x="100" dy="32.66">Cross-workspace access · forged sessions · CSRF</tspan><tspan x="100" dy="32.66">Full browser journey · mobile layout · axe checks</tspan></text>
 <text x="950" y="1967" font-size="29" fill="#292039" font-weight="650"><tspan x="950" dy="0">Keep boundaries honest</tspan></text>
-<text x="950" y="2012" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="950" dy="0">Demo people and roles are explicitly simulated.</tspan><tspan x="950" dy="32.66">Google Calendar live mode needs separate credentials.</tspan><tspan x="950" dy="32.66">Original academic portal / MongoDB stays separate.</tspan></text>
+<text x="950" y="2012" font-size="23" fill="#6b5e7a" font-weight="400"><tspan x="950" dy="0">Accounts and sample workspaces stay separate.</tspan><tspan x="950" dy="32.66">Google Calendar live mode needs separate credentials.</tspan><tspan x="950" dy="32.66">Original academic portal / MongoDB stays separate.</tspan></text>
 <text x="70" y="2191" font-size="27" fill="#292039" font-weight="600"><tspan x="70" dy="0">Built around campus life. Designed to explain, test and recover.</tspan></text>
 <text x="70" y="2226" font-size="22" fill="#6b5e7a" font-weight="400"><tspan x="70" dy="0">React · Java · Spring Security · REST · JDBC / SQL · Flyway · PostgreSQL · Playwright</tspan></text>
 </g></svg>
