@@ -27,6 +27,9 @@ export default function Homepage() {
           </span>
         </Link>
         <nav aria-label="CampusFlow navigation">
+          <Link to="/ops/sign-in" className="cf-text-link">
+            Sign in
+          </Link>
           <Link to="/choose" className="cf-landing-portal">
             Academic portal
           </Link>

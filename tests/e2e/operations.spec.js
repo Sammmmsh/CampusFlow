@@ -186,6 +186,7 @@ test("request dialogs support keyboard focus and pass accessibility checks", asy
   ).toEqual([]);
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
+  await page.getByRole("link", { name: "View all", exact: true }).click();
   await page.getByRole("button", { name: /A day on campus/ }).click();
   scan = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])

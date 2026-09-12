@@ -3,7 +3,7 @@ export async function api(path, { method = "GET", body, key } = {}) {
   const controller = new AbortController();
   const timeout = setTimeout(
     () => controller.abort(),
-    path === "/session" ? 90000 : 20000,
+    path === "/session" || path.startsWith("/auth/") ? 90000 : 20000,
   );
   try {
     const response = await fetch(`/api/ops${path}`, {
@@ -40,11 +40,23 @@ export async function api(path, { method = "GET", body, key } = {}) {
   }
 }
 let sessionPromise;
+export function accountPreference(enabled) {
+  try {
+    localStorage.setItem("cf-account", enabled ? "1" : "0");
+  } catch (_) {}
+}
+function expectsAccount() {
+  try {
+    return localStorage.getItem("cf-account") === "1";
+  } catch (_) {
+    return false;
+  }
+}
 export function ensureSession() {
   if (!sessionPromise)
     sessionPromise = api("/session")
       .catch((error) => {
-        if (error.status === 401)
+        if (error.status === 401 && !expectsAccount())
           return api("/session", { method: "POST", body: { role: "student" } });
         throw error;
       })

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogTitle,
@@ -35,7 +35,8 @@ import {
   ErrorOutlineRounded,
 } from "@mui/icons-material";
 import Students from "../assets/students.svg";
-import { api, ensureSession } from "./api";
+import { api, ensureSession, accountPreference } from "./api";
+import AccountDialog from "./AccountDialog";
 import "./operations.css";
 
 const theme = createTheme({
@@ -108,6 +109,8 @@ function EquipmentIcon({ category, small }) {
 
 export default function Operations() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [accountOpen, setAccountOpen] = useState(false);
   const page = location.pathname.split("/")[2] || "overview";
   const [data, setData] = useState(null),
     [error, setError] = useState(""),
@@ -129,6 +132,7 @@ export default function Operations() {
       setData(await api("/dashboard"));
     } catch (e) {
       setError(e.message);
+      if (e.status === 401) setData(null);
     } finally {
       setLoading(false);
     }
@@ -215,7 +219,9 @@ export default function Operations() {
             allocated: [["collect", "Record collection"]],
             collected: [["return", "Confirm return"]],
           }[detail.status] || []
-        : data.role === "student" && detail.status === "pending"
+        : data.role === "student" &&
+            detail.status === "pending" &&
+            (data.demo || detail.requester_id === data.accountId)
           ? [["cancel", "Cancel request"]]
           : []
     : [];
@@ -268,8 +274,9 @@ export default function Operations() {
               <span className="cf-demo-dot" />
               Your own little campus
               <p>
-                This is a private demo with sample people and equipment. Try
-                every role; your changes stay in this workspace.
+                {data && !data.demo
+                  ? "Your team's bookings stay in this account workspace. The catalogue starts with sample equipment."
+                  : "This is a private demo with sample people and equipment. Try every role; your changes stay in this workspace."}
               </p>
             </div>
             <Link to="/choose" className="cf-portal-link">
@@ -306,7 +313,40 @@ export default function Operations() {
               </strong>
             </div>
             <div className="cf-topbar-right">
-              <span className="cf-demo-pill">Interactive demo</span>
+              <span className="cf-demo-pill">
+                {data && !data.demo ? "Team workspace" : "Interactive demo"}
+              </span>
+              <div className="cf-account-actions">
+                {data && !data.demo ? (
+                  <>
+                    <button type="button" onClick={() => setAccountOpen(true)}>
+                      Account
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={async () => {
+                        setBusy(true);
+                        try {
+                          await api("/auth/logout", {
+                            method: "POST",
+                            body: {},
+                          });
+                          accountPreference(true);
+                          navigate("/ops/sign-in");
+                        } catch (e) {
+                          setError(e.message);
+                          setBusy(false);
+                        }
+                      }}
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <Link to="/ops/sign-in">Sign in</Link>
+                )}
+              </div>
               <span className="cf-avatar">
                 {data?.name
                   ?.split(" ")
@@ -352,9 +392,12 @@ export default function Operations() {
                 <HubOutlined />
                 <h1>Let’s get you connected.</h1>
                 <p>
-                  The operations service isn’t responding yet. Your academic
-                  portal is separate and unchanged.
+                  Sign in if your session has expired, or retry if the service
+                  is still waking up.
                 </p>
+                <Link to="/ops/sign-in" className="cf-button primary">
+                  Sign in to your workspace
+                </Link>
                 <button
                   className="cf-button primary"
                   onClick={() => {
@@ -381,7 +424,7 @@ export default function Operations() {
                     </p>
                     <h1>
                       {page === "overview"
-                        ? `Hey ${data.name.split(" ")[0]}, let’s make things happen.`
+                        ? `Hey ${data.name.startsWith("Dr.") ? data.name : data.name.split(" ")[0]}, let’s make things happen.`
                         : {
                             requests: "A little less chasing.",
                             equipment: "Good ideas deserve good equipment.",
@@ -408,12 +451,16 @@ export default function Operations() {
                   </div>
                   <div className="cf-heading-controls">
                     <label className="cf-role-label">
-                      Explore as
+                      {data.demo
+                        ? "Explore as"
+                        : data.owner
+                          ? "Owner · act as"
+                          : "Assigned role"}
                       <select
-                        aria-label="Demo role"
+                        aria-label={data.demo ? "Demo role" : "Workspace role"}
                         value={data.role}
                         onChange={(e) => switchRole(e.target.value)}
-                        disabled={busy}
+                        disabled={busy || (!data.demo && !data.owner)}
                       >
                         {Object.entries(roleNames).map(([value, label]) => (
                           <option key={value} value={value}>
@@ -1103,6 +1150,14 @@ export default function Operations() {
           </div>
         )}
       </div>
+      {data && !data.demo && (
+        <AccountDialog
+          data={data}
+          open={accountOpen}
+          onClose={() => setAccountOpen(false)}
+          onRefresh={load}
+        />
+      )}
     </ThemeProvider>
   );
 }
