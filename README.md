@@ -29,6 +29,8 @@ Students can cancel their own pending requests. Faculty check the purpose and av
 
 ## Accounts and demo access
 
+Open [workspace accounts](https://campusflow-ops.vercel.app/ops/sign-in) to **sign in**, **create a workspace** or **join a team** with an invitation code. The stable public address is `campusflow-ops.vercel.app`; individual Vercel deployment URLs are snapshots and may not have account access configured.
+
 The sample workspace opens without registration. It contains fictional people and bookings, with a role selector for exploring each part of the workflow. Each sample workspace is isolated; demo sessions last one day and sample workspaces are cleaned up after seven days.
 
 Creating an account starts a separate workspace with six equipment items and no fictional bookings. The owner can invite teammates from **Account** using a single-use code that expires after 48 hours. Invited members receive a fixed role; the owner can use all three roles. Account workspaces are kept when sample data is cleaned up.
@@ -136,13 +138,15 @@ npm run test:e2e
 
 The suite contains **25 Java tests** and **15 browser tests**, covering account invitations, permissions, saved bookings, concurrent approvals, duplicate submissions, late returns and calendar recovery. GitHub Actions runs backend checks against PostgreSQL 18. Browser checks include mobile layouts, keyboard interaction and automated accessibility scans.
 
-[CI runs](https://github.com/Sammmmsh/CampusFlow/actions)
+[CI runs](https://github.com/Sammmmsh/CampusFlow/actions) · [Successful live account and equipment checks](https://github.com/Sammmmsh/CampusFlow/actions/runs/34718415362)
 
 ## Original academic portal
 
 The repository also includes the original React/Express/MongoDB application for classes, attendance, results, notices and complaints. Its Express backend is in `backend/`; the equipment operations API is in `ops-service/`.
 
 The academic backend is separate from the public operations deployment. Running the equipment workflow does not require it, and the PostgreSQL migration does not modify its MongoDB data.
+
+On the public site, academic login routes lead to a portal chooser with a link to the working equipment workspace accounts. Academic login forms are available locally when `REACT_APP_BASE_URL` is configured for the Express backend.
 
 ## Current limitations
 
