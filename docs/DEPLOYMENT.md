@@ -15,9 +15,9 @@ The frontend runs on Vercel. The Spring Boot API runs as a Docker web service on
 - Live Spring Boot service: https://campusflow-ops.onrender.com
 - Backend revision `8f3ed42` is live on Render. Both `/actuator/health` and `/actuator/health/liveness` returned HTTP 200 with `UP` after cutover.
 - Neon shows successful Flyway V1 and V2 history entries. V2 adds accounts and invitation membership to the imported workflow data.
-- Vercel production deployment `dpl_GQynv4eo7oSo7yJRh2LWRjGvZE2b` serves the account UI at the existing public URL.
+- The account UI is available at https://campusflow-ops.vercel.app/ops/sign-in. Use this stable address for bookmarks and shared links.
 - [PostgreSQL and browser CI](https://github.com/Sammmmsh/CampusFlow/actions/runs/34701996862) passed for the deployed application source.
-- The post-migration live browser run is pending. Attempts from the development network on 13 September returned connection resets/timeouts before the Vercel application loaded. A manual GitHub-hosted check is prepared to verify the public deployment from another network.
+- The [post-migration live deployment check](https://github.com/Sammmmsh/CampusFlow/actions/runs/34718415362) passed for revision `ac363bd`, including the live account and equipment workflows and screenshot capture.
 - The sign-in screenshot was captured from the running local application; the existing workflow screenshots were captured from the earlier live deployment. Refresh them with the live workflow after verification.
 
 The old Render **free PostgreSQL database expires on 11 October 2026**. It is retained as the migration source and was not deleted. Neon displayed no branch expiry on its Free plan; this is still a quota-limited service, not a promise of permanent free hosting. No paid plan was enabled. The free Java instance sleeps after inactivity, so its first request can take longer.
@@ -72,6 +72,8 @@ The default provider is a simulator and is labelled in the interface. Enabling t
 
 - **401 on the first session read:** anonymous visitors can enter a sample workspace; returning account users are asked to sign in again.
 - **403 on a mutation:** check `APP_ORIGIN`, the HttpOnly cookie and `X-CSRF-Token`. Do not disable the checks.
+- **“This origin is not allowed” on a Vercel deployment URL:** use the stable frontend address above. `APP_ORIGIN` contains exact origins, not a wildcard for every Vercel deployment. The previously shared `https://campusflow-l1v8ngwan-samsh2.vercel.app` origin was also added to the deployed allowlist; empty registration requests from both addresses reach validation, while an unrelated origin still receives HTTP 403.
+- **Academic login unavailable:** `/Studentlogin`, `/Teacherlogin`, `/Adminlogin` and `/Adminregister` lead to the portal chooser when no academic backend is configured. Follow its workspace sign-in link for the deployed Spring Boot accounts. Local academic login remains available when `REACT_APP_BASE_URL` points to Express.
 - **409 on approval:** another approved booking occupies the requested capacity. Change the slot or quantity.
 - **409 on collection:** another user still has the units checked out. Record a return first.
 - **Calendar job failed:** approval is saved. Recover the demo provider or fix the live token, then retry.

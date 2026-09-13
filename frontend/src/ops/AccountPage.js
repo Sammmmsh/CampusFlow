@@ -82,7 +82,17 @@ export default function AccountPage() {
         </div>
         {error && (
           <p className="cf-account-error" role="alert">
-            {error}
+            {error === "This origin is not allowed." ? (
+              <>
+                Please use the main CampusFlow site to sign in or create a
+                workspace.{" "}
+                <a href="https://campusflow-ops.vercel.app/ops/sign-in">
+                  Open CampusFlow sign-in
+                </a>
+              </>
+            ) : (
+              error
+            )}
           </p>
         )}
         <form key={mode} onSubmit={submit}>

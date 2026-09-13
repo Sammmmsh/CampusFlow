@@ -36,55 +36,65 @@ export default function ChooseUser() {
         <p>Classes, attendance and the people who keep campus running.</p>
         {!process.env.REACT_APP_BASE_URL && (
           <p className="cf-footnote">
-            Academic sign-in is unavailable on this demo. Explore the equipment
-            workspace below with sample campus data.
+            Classes and attendance belong to a separate academic portal that is
+            not connected to this website. Equipment workspace accounts are
+            available now: sign in or create a workspace below.
           </p>
         )}
-        <div className="cf-choose-grid">
-          {[
-            {
-              role: "Admin",
-              name: "Administrator",
-              text: "Manage classes, people and campus notices.",
-              Icon: AccountCircleOutlined,
-            },
-            {
-              role: "Student",
-              name: "Student",
-              text: "Your subjects, attendance and progress.",
-              Icon: SchoolRounded,
-            },
-            {
-              role: "Teacher",
-              name: "Teacher",
-              text: "Support your students and manage your classes.",
-              Icon: GroupsOutlined,
-            },
-          ].map(({ role, name, text, Icon }) => (
-            <Link className="cf-choose-card" to={`/${role}login`} key={role}>
-              <Icon />
-              <h2>{name}</h2>
-              <p>{text}</p>
-              <span>
-                Sign in <ArrowForwardRounded />
-              </span>
-            </Link>
-          ))}
-        </div>
+        {process.env.REACT_APP_BASE_URL && (
+          <div className="cf-choose-grid">
+            {[
+              {
+                role: "Admin",
+                name: "Administrator",
+                text: "Manage classes, people and campus notices.",
+                Icon: AccountCircleOutlined,
+              },
+              {
+                role: "Student",
+                name: "Student",
+                text: "Your subjects, attendance and progress.",
+                Icon: SchoolRounded,
+              },
+              {
+                role: "Teacher",
+                name: "Teacher",
+                text: "Support your students and manage your classes.",
+                Icon: GroupsOutlined,
+              },
+            ].map(({ role, name, text, Icon }) => (
+              <Link className="cf-choose-card" to={`/${role}login`} key={role}>
+                <Icon />
+                <h2>{name}</h2>
+                <p>{text}</p>
+                <span>
+                  Sign in <ArrowForwardRounded />
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
         <div className="cf-choose-demo">
-          <strong>Just looking around?</strong>
+          <strong>Your equipment workspace</strong>
           <p>
-            Our new equipment workspace has an isolated, working demo. No shared
-            guest passwords.
+            Sign in to keep your bookings, create a team or join with an
+            invitation. You can also explore a separate sample workspace.
           </p>
-          <Link to="/ops" className="cf-button primary">
-            Explore the operations demo <ArrowForwardRounded />
+          <Link to="/ops/sign-in" className="cf-button primary">
+            Sign in or create a workspace <ArrowForwardRounded />
           </Link>
+          <p>
+            <Link to="/ops" className="cf-button secondary">
+              Explore the operations demo <ArrowForwardRounded />
+            </Link>
+          </p>
         </div>
-        <p className="cf-footnote">
-          The academic portal uses your existing campus account and its original
-          service.
-        </p>
+        {process.env.REACT_APP_BASE_URL && (
+          <p className="cf-footnote">
+            The academic portal uses your existing campus account and its
+            original service.
+          </p>
+        )}
       </main>
     </div>
   );

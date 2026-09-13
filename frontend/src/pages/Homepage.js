@@ -75,8 +75,8 @@ export default function Homepage() {
               <Link to="/ops" className="cf-button primary">
                 Explore the workspace <ArrowForwardRounded />
               </Link>
-              <Link to="/choose" className="cf-text-link">
-                Go to academic portal <EastRounded />
+              <Link to="/ops/sign-in" className="cf-text-link">
+                Create or join a team <EastRounded />
               </Link>
             </div>
             <p className="cf-landing-demo">

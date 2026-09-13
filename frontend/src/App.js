@@ -30,11 +30,47 @@ const LegacyApp = () => {
             element={<ChooseUser visitor="guest" />}
           />
 
-          <Route path="/Adminlogin" element={<LoginPage role="Admin" />} />
-          <Route path="/Studentlogin" element={<LoginPage role="Student" />} />
-          <Route path="/Teacherlogin" element={<LoginPage role="Teacher" />} />
+          <Route
+            path="/Adminlogin"
+            element={
+              process.env.REACT_APP_BASE_URL ? (
+                <LoginPage role="Admin" />
+              ) : (
+                <Navigate to="/choose" replace />
+              )
+            }
+          />
+          <Route
+            path="/Studentlogin"
+            element={
+              process.env.REACT_APP_BASE_URL ? (
+                <LoginPage role="Student" />
+              ) : (
+                <Navigate to="/choose" replace />
+              )
+            }
+          />
+          <Route
+            path="/Teacherlogin"
+            element={
+              process.env.REACT_APP_BASE_URL ? (
+                <LoginPage role="Teacher" />
+              ) : (
+                <Navigate to="/choose" replace />
+              )
+            }
+          />
 
-          <Route path="/Adminregister" element={<AdminRegisterPage />} />
+          <Route
+            path="/Adminregister"
+            element={
+              process.env.REACT_APP_BASE_URL ? (
+                <AdminRegisterPage />
+              ) : (
+                <Navigate to="/choose" replace />
+              )
+            }
+          />
 
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
